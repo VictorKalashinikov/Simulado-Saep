@@ -1,0 +1,37 @@
+================================================================================
+MODELAGEM DE DADOS - SISTEMA DE CONTROLE DE ESTOQUE (LOJA ESCOLA)
+================================================================================
+
+1. DIAGRAMA ENTIDADE-RELACIONAMENTO (DER / MER)
+
++-----------------------------------+          +-----------------------------------+
+|             PRODUTOS              |          |           MOVIMENTACOES           |
++-----------------------------------+          +-----------------------------------+
+| PK | id            : String/UUID  | 1      N | PK | id            : String/UUID  |
+| UK | codigo        : String (SKU) |--------->| FK | produtoId     : String/UUID  |
+|    | nome          : String       |          |    | tipo          : String       |
+|    | categoria     : String       |          |    | quantidade    : Integer      |
+|    | preco         : Float        |          |    | dataHora      : DateTime/ISO |
+|    | estoqueAtual  : Integer      |          |    | observacao    : String       |
+|    | estoqueMinimo : Integer      |          +-----------------------------------+
++-----------------------------------+
+
+Legenda:
+- PK (Primary Key): Identificador único do registro.
+- UK (Unique Key): Chave única de negócio (SKU não pode se repetir).
+- FK (Foreign Key): Chave estrangeira que referencia PRODUTOS.id.
+- Cardinalidade (1:N): Um (1) produto pode possuir zero ou muitas (N)
+  movimentações de entrada/saída; cada movimentação pertence obrigatoriamente
+  a exatamente um (1) produto.
+
+2. JUSTIFICATIVA DE INTEGRIDADE REFERENCIAL
+Por que cada movimentação deve pertencer a um produto existente?
+- Rastreabilidade e Auditoria: Toda entrada ou saída altera fisicamente o saldo
+  de um item real. Sem o vínculo obrigatório (produtoId) com um produto válido,
+  haveria registros "órfãos" no histórico sem lastro no catálogo.
+- Consistência de Saldo: O cálculo e a validação de saldo disponível (impedindo
+  saídas maiores que o estoque atual) dependem da consulta direta ao registro do
+  produto correspondente.
+- Integridade Histórica: Por esse mesmo princípio de integridade referencial,
+  o sistema impede a exclusão de produtos que já possuem movimentações
+  associadas, evitando que o histórico perca a referência do item movimentado.

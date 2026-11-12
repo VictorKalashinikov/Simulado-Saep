@@ -1,0 +1,41 @@
+================================================================================
+ROTEIRO DE TESTES OBRIGATÓRIOS E EVIDÊNCIAS - SIMULADO SAEP
+================================================================================
+
+Caso de Teste T01 - Duplicidade de SKU
+- Procedimento: Acessar "Novo produto", preencher Nome="Lápis Preto",
+  Código/SKU="PAP-001" (já existente), Categoria="Papelaria", Preço="2.50",
+  Estoque inicial="10", Estoque mínimo="3" e clicar em "Salvar produto".
+- Resultado Esperado: O sistema bloqueia o cadastro, exibe alerta vermelho
+  ("Já existe um produto cadastrado com o código/SKU PAP-001.") e não cria
+  registro duplicado.
+
+Caso de Teste T02 - Saldo Insuficiente na Saída
+- Procedimento: Acessar "Movimentações", selecionar "Caneta azul (PAP-002)"
+  (saldo atual: 3), marcar tipo "Saída", informar Quantidade="5" e clicar em
+  "Confirmar".
+- Resultado Esperado: Operação bloqueada com mensagem de erro ("Saldo
+  insuficiente. Disponível: 3 un."). O saldo permanece em 3 unidades e o
+  histórico não é alterado.
+
+Caso de Teste T03 - Entrada Válida
+- Procedimento: Na tela "Movimentações", selecionar "Caneta azul (PAP-002)"
+  (saldo atual: 3), marcar tipo "Entrada", informar Quantidade="10",
+  Observação="Reposição fornecedor" e clicar em "Confirmar".
+- Resultado Esperado: Mensagem de sucesso exibida, saldo atualizado
+  imediatamente para 13 unidades (status muda de "Estoque baixo" para "Normal")
+  e registro "+10" aparece em "Últimas movimentações".
+
+Caso de Teste T04 - Persistência de Dados (localStorage)
+- Procedimento: Após cadastrar um novo produto e realizar a movimentação do
+  T03, pressionar F5 (recarregar a página) ou fechar e reabrir o navegador.
+- Resultado Esperado: Todos os produtos cadastrados, os saldos atualizados
+  (ex: Caneta azul = 13) e o histórico de movimentações permanecem salvos e
+  visíveis na interface.
+
+Caso de Teste T05 - Pesquisa e Estado Vazio
+- Procedimento: Acessar "Produtos", digitar "PAP-002" no campo de busca e
+  filtrar. Em seguida, pesquisar por um termo inexistente como "XYZ-999".
+- Resultado Esperado: Na primeira busca, exibe apenas "Caneta azul (PAP-002)".
+  Na segunda busca, exibe mensagem amigável de estado vazio ("Nenhum produto
+  encontrado para os filtros informados.").

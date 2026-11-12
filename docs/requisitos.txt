@@ -1,0 +1,57 @@
+================================================================================
+DOCUMENTO DE ANÁLISE DE REQUISITOS - SISTEMA DE CONTROLE DE ESTOQUE (LOJA ESCOLA)
+================================================================================
+
+1. REQUISITOS FUNCIONAIS (RF)
+--------------------------------------------------------------------------------
+RF01 - Cadastro e Manutenção de Produtos:
+O sistema deve permitir cadastrar, listar, pesquisar (por nome, código/SKU ou
+categoria), editar e excluir produtos contendo: nome, código/SKU único,
+categoria, preço unitário, estoque atual e estoque mínimo.
+
+RF02 - Controle de Movimentações de Estoque:
+O sistema deve permitir registrar movimentações de Entrada e Saída vinculadas a
+um produto existente, informando quantidade inteira positiva, data/hora automática
+e observação opcional, atualizando automaticamente o saldo do produto.
+
+RF03 - Painel de Monitoramento e Alerta de Estoque Baixo:
+O sistema deve exibir um painel inicial com indicadores gerais (total de
+produtos cadastrados, soma total de unidades em estoque e quantidade de itens em
+alerta) e destacar visualmente como "Estoque baixo" todo produto cujo estoque
+atual seja menor ou igual ao seu estoque mínimo.
+
+2. REQUISITO NÃO FUNCIONAL (RNF)
+--------------------------------------------------------------------------------
+RNF01 - Persistência Local e Execução Offline:
+A aplicação deve ser desenvolvida com HTML5, CSS3 e JavaScript (ES6+), operando
+totalmente no navegador sem necessidade de servidor de aplicação, banco de dados
+externo ou conexão com a internet, garantindo a persistência dos dados via
+localStorage mesmo após o recarregamento da página.
+
+3. REGRAS DE NEGÓCIO (RN)
+--------------------------------------------------------------------------------
+RN01 - Integridade de Cadastro e Saldo:
+Não é permitido cadastrar produtos com código/SKU duplicado. O preço unitário
+deve ser maior que zero (R$ > 0), enquanto o estoque inicial e o estoque mínimo
+devem ser números inteiros não negativos (>= 0).
+
+RN02 - Bloqueio de Saldo Negativo e Restrição de Exclusão:
+Nenhuma movimentação de Saída pode resultar em saldo negativo (quantidade de
+saída não pode ultrapassar o saldo disponível). Além disso, produtos que
+possuem histórico de movimentações não podem ser excluídos para preservar a
+rastreabilidade do histórico; produtos sem movimentações podem ser excluídos
+mediante confirmação explícita do usuário.
+
+4. CRITÉRIO DE ACEITAÇÃO MENSURÁVEL ("Registrar saída de estoque")
+--------------------------------------------------------------------------------
+Funcionalidade: Registrar saída de estoque
+- Cenário 1 (Saída Válida): Dado que o produto "Caneta azul" (PAP-002) possui
+  saldo atual de 10 unidades, quando o operador registrar uma Saída de 4
+  unidades, então o sistema deve salvar a movimentação com data/hora atual,
+  reduzir o saldo do produto para 6 unidades no localStorage e exibir o registro
+  no histórico em até 1 segundo.
+- Cenário 2 (Saldo Insuficiente): Dado que o produto "Caneta azul" (PAP-002)
+  possui saldo atual de 3 unidades, quando o operador tentar registrar uma Saída
+  de 5 unidades, então o sistema deve bloquear a operação, exibir mensagem de
+  erro clara ("A saída não pode ultrapassar o saldo disponível"), manter o saldo
+  em 3 unidades e não adicionar nenhum registro ao histórico.
